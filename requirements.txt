@@ -1,0 +1,26 @@
+# Install torch first with the CUDA index URL appropriate for your GPU, e.g.:
+#   pip install torch==2.5.1 torchvision --index-url https://download.pytorch.org/whl/cu121
+# Then:
+#   pip install -r requirements.txt
+#
+# The vendored ./qwenimage module (pipeline_qwenimage_edit_plus, transformer_qwenimage)
+# requires current diffusers. If diffusers>=0.34 doesn't expose the needed symbols on
+# your install, fall back to:
+#   pip install "git+https://github.com/huggingface/diffusers.git"
+
+diffusers>=0.34
+transformers>=4.46
+accelerate>=1.0
+peft>=0.19,<0.20  # peft 0.19 requires torchao>=0.16 (see below)
+safetensors>=0.4
+sentencepiece
+huggingface_hub>=0.26
+pillow
+numpy
+pyyaml
+tqdm
+
+# Strongly recommended on 12 GB cards: NF4 4-bit quantization of the
+# transformer drops VRAM from ~19 GB bf16 to ~4.75 GB, with native CUDA
+# kernels on Windows (bitsandbytes ships prebuilt Windows wheels).
+bitsandbytes>=0.45

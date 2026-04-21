@@ -1,0 +1,28 @@
+# Orbit Decay — single source of truth for both stages.
+# The SHA-256 of this file is recorded in runs/<run-name>/state.json as config_hash.
+# If the hash drifts mid-run, `generate.py --resume` aborts unless --force is passed.
+
+# --- Source ---
+source_image: portrait.jpg
+run_name: portrait_v1
+
+# --- Generation ---
+total_frames: 300
+rotate_degrees: 15           # per-step rotation; positive = right, negative = left
+lora_fuse_scale: 1.25        # matches the HF Space default; part of the "look"
+inference_steps: 4
+true_cfg_scale: 1.0
+longest_side: 1024           # aspect preserved; other side snapped down to a multiple of 8
+randomize_seed: true         # fresh random seed per frame (Space default)
+fixed_seed: null             # integer forces determinism; overrides randomize_seed when set
+enable_cpu_offload: true     # keep on for 12 GB cards; offloads text encoder + VAE between calls
+quantize_4bit: true          # NF4 4-bit quantize the transformer (~19 GB -> ~4.75 GB); needs bitsandbytes
+
+# --- Assembly ---
+start_hold_seconds: 5.0      # first-frame hold duration
+end_fps: 25                  # final-frame fps (hold = 1/end_fps)
+curve: exponential           # exponential | linear | custom
+custom_durations_csv: null   # path to CSV of per-frame durations when curve == custom
+output_format: mp4
+output_codec: libx264
+output_crf: 18
