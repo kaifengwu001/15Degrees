@@ -15,8 +15,9 @@ true_cfg_scale: 1.0
 longest_side: 1024           # aspect preserved; other side snapped down to a multiple of 8
 randomize_seed: true         # fresh random seed per frame (Space default)
 fixed_seed: null             # integer forces determinism; overrides randomize_seed when set
-enable_cpu_offload: true     # keep on for 12 GB cards; offloads text encoder + VAE between calls
-quantize_4bit: true          # NF4 4-bit quantize the transformer (~19 GB -> ~4.75 GB); needs bitsandbytes
+enable_cpu_offload: false    # 4090: selective placement (transformer+VAE on GPU, text encoder on CPU). accelerate's model_cpu_offload hangs at VRAM saturation on Windows; see orbit/pipeline.py.
+quantize_4bit: false         # 4090 uses fp8 residency (weights stored as fp8_e4m3 on disk, bf16 compute). Flip true on <=16 GB cards for NF4.
+                             # Note: bf16 residency is NOT an option on 24 GB -- the 20.4 B-param transformer is 38 GB in bf16. See orbit/pipeline.py module docstring.
 
 # --- Assembly ---
 start_hold_seconds: 5.0      # first-frame hold duration

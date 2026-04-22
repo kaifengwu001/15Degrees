@@ -12,10 +12,23 @@ Usage examples:
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from dataclasses import replace as dc_replace
 from pathlib import Path
 from typing import Optional
+
+if os.environ.get("ORBIT_SDPA_MATH_ONLY", "0") == "1":
+    # Force PyTorch's scaled_dot_product_attention onto the pure math backend.
+    # Windows + sm_89 + very-long-sequence bf16 attention hits native crashes in
+    # cuDNN / flash / mem-efficient fused kernels on some driver/cuDNN combos.
+    # Math backend is slower but always correct.
+    import torch
+
+    torch.backends.cuda.enable_flash_sdp(False)
+    torch.backends.cuda.enable_mem_efficient_sdp(False)
+    torch.backends.cuda.enable_cudnn_sdp(False)
+    torch.backends.cuda.enable_math_sdp(True)
 
 from PIL import Image
 
