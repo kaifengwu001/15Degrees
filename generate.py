@@ -138,6 +138,7 @@ def _parse_args(argv: Optional[list[str]]) -> argparse.Namespace:
     parser.add_argument("--source", help="Override source_image from config (fresh runs only)")
     parser.add_argument("--run-name", help="Override run_name from config")
     parser.add_argument("--frames", type=int, help="Override total_frames from config")
+    parser.add_argument("--rotate-degrees", type=float, help="Override per-step rotation (fresh runs only)")
     parser.add_argument("--limit", type=int, help="Cap this invocation at N frames (for scouting drift)")
     parser.add_argument("--fixed-seed", type=int, help="Force deterministic seed (overrides randomize_seed)")
     parser.add_argument("--randomize-seed", action="store_true", help="Force randomize_seed=true")
@@ -160,6 +161,8 @@ def _apply_cli_overrides(gen_cfg: GenerationConfig, args: argparse.Namespace) ->
         overrides["run_name"] = args.run_name
     if args.frames is not None:
         overrides["total_frames"] = args.frames
+    if args.rotate_degrees is not None:
+        overrides["rotate_degrees"] = args.rotate_degrees
     if args.fixed_seed is not None:
         overrides["fixed_seed"] = args.fixed_seed
     if args.randomize_seed:

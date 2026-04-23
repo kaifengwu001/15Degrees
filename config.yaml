@@ -7,10 +7,10 @@ source_image: portrait.jpg
 run_name: portrait_v1
 
 # --- Generation ---
-total_frames: 300
-rotate_degrees: 15           # per-step rotation; positive = right, negative = left
+total_frames: 150            # coarse pass; backfill.py doubles this to 300 in the final sequence
+rotate_degrees: 30           # coarse per-step rotation; positive = right, negative = left. Backfill uses half of this (15°).
 lora_fuse_scale: 1.25        # matches the HF Space default; part of the "look"
-inference_steps: 4
+inference_steps: 6            # rapid model default is 4; 6 gives sharper detail on fine structure at ~+3 s/frame
 true_cfg_scale: 1.0
 longest_side: 1024           # aspect preserved; other side snapped down to a multiple of 8
 randomize_seed: true         # fresh random seed per frame (Space default)
